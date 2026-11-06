@@ -22,12 +22,15 @@ jobs:
       - name: Extract source
         run: unzip -q Sodium-Addon-Source.zip -d source
 
-      - name: Build mod
+           - name: Extract source
         run: |
-          PROJECT_DIR=$(dirname "$(find source -name build.gradle -print -quit)")
-          cd "$PROJECT_DIR"
-          gradle build --no-daemon
-
+          ZIP_FILE=$(find . -type f -iname '*.zip' -print -quit)
+          if [ -z "$ZIP_FILE" ]; then
+            echo "ERROR: No ZIP file found!"
+            exit 1
+          fi
+          echo "Found: $ZIP_FILE"
+          unzip -q "$ZIP_FILE" -d source
       - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
